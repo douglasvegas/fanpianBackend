@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>123</title>
+    <link rel='stylesheet' href='/css/style.css' />
+    <link rel="shortcut icon" href="/my.ico"/>
+  </head>
+  <body>
+    <h1>00</h1>
+    <p>Welcome to Fanpian123</p>
+
+
+    <h2>单个文件上传</h2>  
+<form action="/signup" method="post" enctype="multipart/form-data">
+    <input placeholder="用户名" type="text" name="name"><br />
+    <input placeholder="密码" type="password" name="password"><br />
+    <input placeholder="手机" type="text" name="phone"><br />
+    <input placeholder="年龄" type="number" name="age"><br />
+    <select name="gender">
+      <option value="m">男</option>
+      <option value="f">女</option>
+      <option value="x">保密</option>
+    </select>
+    <br />
+    <input type="file" name="avatar"><br />
+    <input type="submit" value="提交">
+</form>
+  </body>
+</html>
