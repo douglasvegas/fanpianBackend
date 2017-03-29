@@ -29,7 +29,7 @@ module.exports = {
     //获取一篇post
     getPostById: function getPostById (postId) {
         return Post
-        .find({_id: postId},{title:1,content:1,imgUrl:1,author:1,create_date:1,pv:1,keep:1,like:1,type:1})
+        .find({_id: postId},{title:1,content:1,imgUrl:1,author:1,create_date:1,pv:1,keep:1,like:1,type:1,cateId:1})
         .populate({ path: 'author', model: 'User', select: {'name':1,_id:0}})
         .exec();
     },
