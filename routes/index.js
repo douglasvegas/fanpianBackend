@@ -1,26 +1,17 @@
 module.exports = function (app) {
   app.all('*',function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:8080");
-    // res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", "http://www.douglasvegas.com");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
-    
-    // res.header('X-Content-Type-Options','nosniff');
-
-    // res.header("Access-Control-Allow-Headers", "Authorization, Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With");
-    // res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-    res.header("Content-Type", "application/json;charset=utf-8");
-
+    res.header("Content-Type", "application/json");
     res.header('Access-Control-Allow-Credentials','true');
     if (req.method == 'OPTIONS') {
       res.sendStatus(200);
       return false;
     };
-    next();
+    return next();
   })
-  app.get('/',function (req, res) {
-    res.render('index',{title:'sunxin'})
-  })
+  
   app.use('/signup', require('./signup'))
   app.use('/user',require('./user'))
 
@@ -31,5 +22,14 @@ module.exports = function (app) {
 
   app.use('/follow', require('./follow'))
   app.use('/uploadImg', require('./uploadImg'))
+  app.use('/category', require('./category'))
+
+  // 404
+  // app.all('*', (req, res) => {
+  //   res.status(404).jsonp({
+  //     code: 0,
+  //     message: '无效的API请求'
+  //   })
+  // });
 
 }

@@ -21,13 +21,12 @@ router.post('/getCount', function (req, res, next) {
         FollowModel.getFansCount(user), //获取粉丝数
     ])
     .then(function (result) {
-        console.log(result)
-        var follows = result[0]
-        var fans    = result[1]
-        res.json({
+        var follows = result[0];
+        var fans    = result[1];
+        return res.json({
             follows: follows,
             fans: fans
-        })
+        });
     })
     .catch(next)
 

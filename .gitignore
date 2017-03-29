@@ -1,2 +1,5 @@
 node_modules
-public/upload
+public/upload/*
+public/avatar/*
+public/.DS_Store
+.DS_Store

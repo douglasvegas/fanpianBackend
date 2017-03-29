@@ -50,20 +50,18 @@ app.use(session({
 
 
 //处理表单及文件上传的中间件
-app.use(require('express-formidable')({
-  uploadDir: path.join(__dirname, 'public/upload'),// 上传文件目录
-  keepExtensions: true// 保留后缀
-}));
+// app.use(require('express-formidable')({
+//   uploadDir: path.join(__dirname, 'public/upload'),// 上传文件目录
+//   keepExtensions: true// 保留后缀
+// }));
 
-
-
-
-// app.use(cors());
 routes(app);
 
 app.use(function (err, req, res, next) {
-  res.render('error', {
-    error: err
+  console.log(err)
+  return res.json({
+    code: 500,
+    msg: 'something error happen'
   })
 })
 

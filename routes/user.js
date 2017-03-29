@@ -8,7 +8,7 @@ var UserModel = require('../models/UserModel');
 router.get('/', function(req, res, next) {
       //查询所有用户
       UserModel.getAllUsers().then(function(result){
-          res.json(result)
+          return res.json(result)
       })
     //根据session获取当前用户
    
@@ -37,20 +37,18 @@ router.get('/', function(req, res, next) {
 });
 
 // post /user
-router.post('/', function(req, res, next) {
-     
+router.post('/', (req, res, next) => {
      if (!req.session.user) {
        return res.json({
          code:202,
          message:'重新登录'
        })
      }
+
     var id = req.session.user._id;
-    UserModel.getUserById(id).then(function (result) {
-        result.password = null;
-        result._id = null;
-        return res.json(result)
-      })
+    UserModel.getUserById(id).then(result => { return res.json(result); return })
+    .catch(next)
+
 })
 
 module.exports = router;

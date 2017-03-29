@@ -4,15 +4,17 @@ var router = express.Router();
 
 var sha1 = require('sha1')
 var UserModel = require('../models/UserModel')
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
 
 router.get('/', function (req, res, next) {
-    res.render('signin')
+    return res.render('signin')
 })
 
-router.post('/',function (req, res, next) {
+router.post('/',multipartMiddleware,function (req, res, next) {
     //清空session中用户信息
-    var name = req.fields.name;
-    var password = req.fields.password;
+    var name = req.body.name;
+    var password = req.body.password;
     UserModel.getUserByName(name)
         .then(function (user) {
 
@@ -40,9 +42,7 @@ router.post('/',function (req, res, next) {
                  user: user
              })
         })
-        .catch(function (err) {
-            console.log(err)
-        })
+        .catch(next)
 })
 
 module.exports = router;
