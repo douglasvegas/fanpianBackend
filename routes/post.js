@@ -39,7 +39,9 @@ router.post('/hot', function (req, res, next) {
 //获取相应cateId下的文章
 router.post('/cate/:cateId', function (req, res, next) {
     var cateId = req.params.cateId;
-    PostModel.getCategoryPosts(cateId).then(function (result) {
+    var pageNo = req.body.pageNo;
+    var pageSize = req.body.pageSize;
+    PostModel.getCategoryPosts(cateId,pageNo,pageSize).then(function (result) {
         return res.json(result)
     }).catch(function (err) {
         console.log(err)

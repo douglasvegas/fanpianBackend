@@ -11,8 +11,10 @@ module.exports = {
                 .exec()
     },
     //获取cateId下的文章
-    getCategoryPosts: function getCategoryPosts (cateId) {
+    getCategoryPosts: function getCategoryPosts (cateId,pageNo, pageSize) {
         return Post.find({ cateId: cateId })
+                .limit(pageSize)
+                .skip(pageSize * (pageNo -1) )
                 .sort({'_id': -1})
                 .populate({ path:'author', model: 'User', select: {'name':1 ,_id:0}})
                 .exec();
@@ -29,7 +31,7 @@ module.exports = {
     //获取一篇post
     getPostById: function getPostById (postId) {
         return Post
-        .find({_id: postId},{title:1,content:1,imgUrl:1,author:1,create_date:1,pv:1,keep:1,like:1,type:1,cateId:1})
+        .find({_id: postId})
         .populate({ path: 'author', model: 'User', select: {'name':1,_id:0}})
         .exec();
     },
@@ -57,6 +59,11 @@ module.exports = {
         return Post
             .update({_id: postId}, { $inc: {keep: -1} })
             .exec()
+    },
+    //增加一条评论
+    incComment: function (postId) {
+        return Post
+            .update({_id: postId}, { $inc: {comments: 1} })
+            .exec()
     }
-
 }
