@@ -24,3 +24,9 @@
 - 每次发布怎么强制清除缓存？
 - www加不加跨域的问题
 
+## 前端地址
+[fanpian](https://github.com/douglasvegas/fanpian)
+
+## 线上预览
+[Record 地址](http://www.douglasvegas.com/)
+
