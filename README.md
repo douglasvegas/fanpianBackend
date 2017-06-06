@@ -28,9 +28,14 @@
 - 每次发布怎么强制清除缓存？
 - www加不加跨域的问题
 
-## 前端地址
+## 前台项目
 [fanpian](https://github.com/douglasvegas/fanpian)
-
-## 线上预览
+## 后台项目
+[fanpian](https://github.com/douglasvegas/fanpianAdmin)
+## 后端项目
+[fanpianBackend](https://github.com/douglasvegas/fanpianBackend)
+## 前台线上预览
 [Record 地址](http://www.douglasvegas.com/)
+## 后台线上预览
+[Record后台地址](http://admin.douglasvegas.com/)
 
