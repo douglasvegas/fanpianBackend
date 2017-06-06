@@ -13,10 +13,14 @@
 - 评论
 - ~~mongoose建立unique索引的坑~~
 - (node:17657) DeprecationWarning: Calling an asynchronous function without callback is deprecated.
+- ~~删除修改增加管理员权限~~
+- 已删除的作者下文章删除、
+- 防灌水、重复提交、拉黑
 
 ## Issues
 
 - cannot set headers问题研究
+- 自增ID
 - mongoose写法总结
 - cookie session安全问题
 - 错误异常处理日志

@@ -19,12 +19,11 @@ router.post('/', multipartMiddleware, function (req, res, next) {
         }else{
           console.log(uploadImgName);  
           return res.json({
-            msg: 501,
+            code: 501,
             msg:'上传图片出错'
           });
         }
     });
-    // var imgUrl = req.files.uploadImg.path.split(path.sep).pop();
     return res.json({
         code:200,
         msg:'上传成功',

@@ -5,8 +5,8 @@ module.exports = {
         return User.create(user);
     },
     //修改用户
-    updateUserInfo: function updateUserInfo (name, data) {
-        return User.update({name:name},{$set:data}).exec()
+    updateUserInfoById: function updateUserInfoById (id, data) {
+        return User.update({_id: id},{$set:data}).exec()
     },
 
     //获取用户
@@ -14,20 +14,50 @@ module.exports = {
         return User.findOne({ name:name }).exec();
     },
 
-    //获取所有用户
-    getAllUsers: function getAllUsers () {
-        return User.find({}).exec();
+    //获取所有用户 分页 模糊搜索
+    getAllUsers: function getAllUsers (pageNo,pageSize = 15,name) {
+        var qs = new RegExp(/.*/);
+        if (name) {
+            qs = new RegExp(name)
+        }
+        return User.find({name: { $regex: qs, $options: "si" }},{_v:0,password:0})
+                    .limit(pageSize)
+                    .skip(pageSize * (pageNo -1))
+                    .exec();    
+        
+    },
+    //获取所有用户数
+    getAllUsersCount: function getAllUsersCount (name) {
+        var qs = new RegExp(/.*/);
+        if (name) {
+            qs = new RegExp(name)
+        }
+        return User.count({name: { $regex: qs, $options: "si" }}).exec();
+        
     },
     //删除用户
     deleteUser: function deleteUser (name) {
         return User.remove({name:name}).exec()
     },
 
+    //根据ID删除用户
+    deleteUserById: function deleteUserById (id) {
+        return User.remove({_id: id}).exec();
+    },
+
     //根据id获取用户
     getUserById: function getUserById (id,cb) {
         return User.findOne({ _id: id },{_v:0,_id:0,password:0}).exec();
     },
-
+    //模糊搜索用户
+    searchUserByName: function searchUserByName (name) {
+        var qs = new RegExp(name);
+        return User.find({name: { $regex: qs } }).exec();
+    },
+    searchUserCountByName: function searchUserByName (name) {
+        var qs = new RegExp(name);
+        return User.count({name: { $regex: qs } }).exec();
+    },
 
     incLike: function (userId) {
         return User

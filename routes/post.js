@@ -15,6 +15,31 @@ var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();
 const objectAssign = require('object-assign');
 
+var adminAuth = require('../interceptor/adminAuth.js');
+
+//获取所有
+router.post('/all', function (req, res, next) {
+    var pageNo = parseInt(req.body.pageNo);
+    var pageSize = parseInt(req.body.pageSize);
+    var title = req.body.title;
+    var content = req.body.content;
+    //getPostsCount
+    Promise.all([
+        PostModel.getPostsCount(title,content),
+        PostModel.getAllPosts(pageNo, pageSize,title,content)
+    ]).then( result => {
+        var count = result[0];
+        var posts = result[1];
+        return res.json({
+            data: posts,
+            count: count,
+            pageNo: pageNo,
+            pageSize: pageSize
+        })
+    }).catch( err => {
+        console.log(err)
+    });
+})
 //热门
 router.post('/hot', function (req, res, next) {
     var pageNo = parseInt(req.body.pageNo);
@@ -53,6 +78,7 @@ router.get('/write', function (req, res, next) {
     return res.render('post')
 })
 
+//获取作者下的文章
 router.get('/',function (req, res, next) {
     var id = req.session.user._id;
     PostModel.getPostsByAuthor(id).then(function (result) {
@@ -112,6 +138,33 @@ router.post('/',multipartMiddleware, function (req, res, next) {
             data: result
         })
     }).catch(next)
+})
+
+//修改文章
+router.post('/edit/:postId', adminAuth, (req, res, next) => {
+    var postId = req.params.postId;
+
+    var title = req.body.title;
+    var content = req.body.content;
+    var data = {
+        title,
+        content
+    };
+
+    PostModel.editPostById(postId,data).then( result => {
+        return res.json(result);
+    })
+
+})
+
+//删除文章
+router.post('/delete', adminAuth,function (req, res, next) {
+    var id = req.body.id;
+    PostModel.deletePostById(id).then(result => {
+        return res.json(result)
+    }).catch(err => {
+        console.log(err)
+    })
 })
 //文章详情
 router.post('/:postId', function (req, res, next) {
@@ -194,10 +247,7 @@ router.post('/:postId/keepCancel', function (req, res, next) {
     }).catch(next)
 })
 
-// router.get('/:postId/comment', function (req, res, next) {
-//     return res.render('comment')
-// })
-
+//留言
 router.post('/:postId/comment',function (req, res, next) {
     var postId = req.params.postId;
     var author = req.session.user._id;
@@ -212,7 +262,7 @@ router.post('/:postId/comment',function (req, res, next) {
         return res.json(result)
     }).catch(next)
 })
-
+//删除留言
 router.post('/:postId/comment/:commentId/remove', function (req, res, next) {
     var commentId = req.params.commentId;
     CommentModel.removeComment(commentId).then(function (result) {

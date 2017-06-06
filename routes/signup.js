@@ -7,6 +7,11 @@ var path = require('path')
 var UserModel = require('../models/UserModel')
 var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();
+
+/**
+ * post /
+ * 
+ */
 router.post('/',multipartMiddleware,function (req, res, next) {
     var imgData = req.body.avatar;
     var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
@@ -48,7 +53,6 @@ router.post('/',multipartMiddleware,function (req, res, next) {
         })
         
     }).catch( e => {
-        console.log(e.toJSON())
         var detailInfo = e.toJSON();
         fs.unlink(fullPath);
         if (e.message.match('E11000 duplicate key')) {

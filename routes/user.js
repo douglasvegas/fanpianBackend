@@ -1,54 +1,66 @@
 var express = require('express');
 var router = express.Router();
 var UserModel = require('../models/UserModel');
-
-// var check = require('../interceptor/check')
-// var checkLogin = check.checkLogin;
-/* GET /user listing. */
+var Auth = require('../interceptor/auth.js');
+var adminAuth = require('../interceptor/adminAuth.js');
+/**
+ * 查询用户 分页
+ * GET /user
+ * params :pageNo,pageSize 
+ */
 router.get('/', function(req, res, next) {
-      //查询所有用户
-      UserModel.getAllUsers().then(function(result){
-          return res.json(result)
-      })
-    //根据session获取当前用户
-   
-
-    //新建一个用户
-    // UserModel.createAccount(user).then(function (result) {
-    //   return res.json(result)
-    // }).catch(function (err) {
-    //   return res.json(err)
-    // })  
-    //修改一个用户信息
-    // UserModel.updateUserInfo("testname",{gender:'f',phone: 15013516500}).then(function (result) {
-    //   return res.json(result)
-    // }).catch(function(err){
-    //   return res.json(err)
-    // })
-    //删除一个用户
-    // UserModel.deleteUser(sName).then(function (result) {
-    //   res.json(result)
-    // })
-
-    //根据用户名查询一个用户
-    // UserModel.getUserByName(sName).then(function(result) {
-    //   return res.json(result);
-    // })
+      var pageNo = parseInt(req.query.pageNo),
+          pageSize = parseInt(req.query.pageSize),
+          name = req.query.name;
+      Promise.all([
+        UserModel.getAllUsersCount(name), //获取用户数目
+        UserModel.getAllUsers(pageNo,pageSize,name)
+      ])
+      .then( result => {
+        var count = result[0];
+        var users = result[1];
+        return res.json({
+          data: users,
+          count: count,
+          pageNo: pageNo,
+          pageSize: pageSize
+        })
+      });
 });
 
-// post /user
-router.post('/', (req, res, next) => {
-     if (!req.session.user) {
-       return res.json({
-         code:202,
-         message:'重新登录'
-       })
-     }
+/**
+ * 修改用户信息
+ * post /edit
+ * params :id
+ */
+router.post('/edit', adminAuth,function (req, res, next) {
+  var id = req.body.id;
+  var data = req.body.data;
+  UserModel.updateUserInfoById(id,data).then( result => {
+    return res.json(result);
+  })
+})
+/**
+ * 根据id删除用户
+ * post /delete
+ * params :id
+ */
+router.post('/delete', adminAuth,function (req, res, next) {
+  var id = req.body.id;
+  UserModel.deleteUserById(id).then( result => {
+    return res.json(result)
+  })
+})
 
+/**
+ * 根据id获取用户信息
+ * post /user
+ * params :id
+ */
+router.post('/', Auth, function (req, res, next){
     var id = req.session.user._id;
-    UserModel.getUserById(id).then(result => { return res.json(result); return })
+    UserModel.getUserById(id).then(result => { return res.json(result);  })
     .catch(next)
-
 })
 
 module.exports = router;

@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var jwt = require('jwt-simple');
 var routes = require('./routes');
 
 var nunjuck = require('nunjucks')
@@ -13,6 +13,8 @@ var pkg = require('./package.json')
 
 var session = require('express-session')
 var MongoStore = require('connect-mongo')(session)
+
+
 
 var cors = require('cors')
 var app = express();
@@ -24,6 +26,8 @@ nunjuck.configure('views', {
   express: app
 })
 app.set('view engine', 'html');
+
+app.set('jwtTokenSecret', 'recordAdmin');
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'my.ico')));
